@@ -1,0 +1,21 @@
+---
+- name: Stop networking
+  shell:
+    cmd: "{{ os.commands.stop_networking }}; sleep 5"
+  tags: 
+    - Stop Networking
+- name: Start networking
+  shell:
+    cmd: "{{ os.commands.start_networking }}; sleep 5"
+  tags:
+    - Start Networking
+- name: Restart networking
+  shell:
+    cmd: "{{ os.commands.restart_networking }}"
+  tags:
+    - Start Networking
+- name: Flush Routing Cache
+  shell:
+    cmd: "ip route flush cache"
+  tags:
+    - Flush Routing Cache

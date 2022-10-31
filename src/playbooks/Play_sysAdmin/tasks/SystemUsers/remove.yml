@@ -1,0 +1,9 @@
+---
+- name: Remove inactive user "{{ system_user.key }}"
+  user:
+    name: "{{ system_user.key }}"
+    remove: yes
+    force: yes
+    state: absent
+  tags:
+    - system_user_remove

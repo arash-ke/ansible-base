@@ -1,0 +1,48 @@
+---
+- name: Host Address
+  debug:
+    var: ansible_host
+  tags:
+    - get_host_addr
+- name: System Uptime
+  debug:
+    var: ansible_facts_uptime
+  tags:
+    - get_uptime
+- name: Apply sysctl_config
+  include_tasks:
+    file: "{{ sysAdmin_tasks_path }}/ApplySysctlConfig.yml"
+    apply:
+      tags:
+        - never
+        - Apply Sysctl
+  vars:
+    sysctl_config: "{{ lookup('vars', config_var, default={}) }}"
+  when:
+    - config_var is defined
+  tags: Apply Sysctl
+- name: Install OS package
+  become: yes
+  package:
+    name: "{{ os.packages[package_name] }}"
+  tags: Install OS Packages
+
+- name: Reboot
+  become: yes
+  reboot:
+    pre_reboot_delay: "{{ g_pre_rebbot_delay|default(omit) }}"
+    post_reboot_delay: "{{ g_pre_rebbot_delay|default(omit) }}"
+  tags: REBOOT
+- name: Network ping
+  tags:
+    - netPing
+  command: ping -c 4 8.8.8.8
+  delegate_to: localhost
+  diff: yes
+- name: Ping
+  tags: ping
+  block:
+    - ping:
+      when: (facts_system|lower) is search('linux|ios')
+    - win_ping:
+      when: (facts_system|lower) == 'windows'

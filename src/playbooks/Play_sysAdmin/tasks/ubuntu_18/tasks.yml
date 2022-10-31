@@ -1,0 +1,4 @@
+---
+- name: Nothing
+  debug:
+    msg: "Nothing to do here"

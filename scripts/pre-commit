@@ -1,0 +1,14 @@
+#!/bin/bash
+
+me="$(realpath $0)"
+me_name=$(basename $me)
+me_dir=$(dirname $me)
+
+echo "Running pre-commit checks ..."
+echo "Checking for encrypted secret files ..."
+$me_dir/check-secrets
+if [ $? -ne 0 ]; then
+    echo "There are unencrypted files in commit, Please fix them"
+    exit -1
+fi
+echo "All checks finished"

@@ -1,0 +1,17 @@
+---
+- name: Stop Networking
+  become: yes
+  shell:
+    cmd: "{{ os.commands.stop_networking }}"
+- name: Start Networking
+  become: yes
+  shell:
+    cmd: "{{ os.commands.start_networking }}"
+- name: Restart Networking
+  become: yes
+  shell:
+    cmd: "{{ os.commands.restart_networking }}"
+- name: Flush Routing Cache
+  become: yes
+  shell:
+    cmd: "{{ os.commands.flush_routing_cache }}"

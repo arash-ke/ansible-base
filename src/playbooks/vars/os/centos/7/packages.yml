@@ -1,0 +1,99 @@
+packages:
+  unused:
+    - firewalld
+  common:
+    - rsyslog
+    - logrotate
+    - net-tools
+    - vim
+    - bash-completion
+    - screen
+  centos_common:
+    # - epel-release
+    - policycoreutils-python-utils
+  elrepo:
+    - elrepo-release
+  wireguard:
+    - kmod-wireguard
+    - wireguard-tools
+  firewall:
+    - iptables
+    - ipset
+  router:
+    - tcpdump
+    - traceroute
+    - mtr
+    - nmon
+    - iftop
+  
+  vmware_guest: open-vm-tools
+  ansible: ansible
+  git: git-core
+  l2tp: xl2tpd
+  ipsec: libreswan
+  php:
+    7.3:
+      repo: remi-safe
+      php:
+        - php73
+        - php73-php
+      modules:
+        ast: php73-php-ast
+        bcmath: php73-php-bcmath
+        brotli: php73-php-brotli
+        cli: php73-php-cli
+        common: php73-php-common
+        componere: php73-php-componere
+        dba: php73-php-dba
+        dbg: php73-php-dbg
+        devel: php73-php-devel
+        embedded: php73-php-embedded
+        enchant: php73-php-enchant
+        fpm: php73-php-fpm
+        gd: php73-php-gd
+        geos: php73-php-geos
+        gmp: php73-php-gmp
+        horde-horde-lz4: php73-php-horde-horde-lz4
+        imap: php73-php-imap
+        interbase: php73-php-interbase
+        intl: php73-php-intl
+        ioncube-loader: php73-php-ioncube-loader
+        json: php73-php-json
+        ldap: php73-php-ldap
+        libvirt: php73-php-libvirt
+        libvirt-doc: php73-php-libvirt-doc
+        litespeed: php73-php-litespeed
+        lz4: php73-php-lz4
+        maxminddb: php73-php-maxminddb
+        mbstring: php73-php-mbstring
+        mysqlnd: php73-php-mysqlnd
+        oci8: php73-php-oci8
+        odbc: php73-php-odbc
+        opcache: php73-php-opcache
+        pdlib: php73-php-pdlib
+        pdo: php73-php-pdo
+        pdo-dblib: php73-php-pdo-dblib
+        pear: php73-php-pear
+        pggi: php73-php-pggi
+        pgsql: php73-php-pgsql
+        phalcon3: php73-php-phalcon3
+        phalcon4: php73-php-phalcon4
+        phpiredis: php73-php-phpiredis
+        pinba: php73-php-pinba
+        process: php73-php-process
+        pspell: php73-php-pspell
+        realpath-turbo: php73-php-realpath-turbo
+        recode: php73-php-recode
+        smbclient: php73-php-smbclient
+        snappy: php73-php-snappy
+        snmp: php73-php-snmp
+        snuffleupagus: php73-php-snuffleupagus
+        soap: php73-php-soap
+        sodium: php73-php-sodium
+        sqlsrv: php73-php-sqlsrv
+        tidy: php73-php-tidy
+        wkhtmltox: php73-php-wkhtmltox
+        xml: php73-php-xml
+        xmlrpc: php73-php-xmlrpc
+        zephir-parser: php73-php-zephir-parser
+        zstd: php73-php-zstd

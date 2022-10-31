@@ -1,0 +1,10 @@
+---
+facts:
+  system: "{{ ansible_facts['net_system'] }}"
+  os_info: "{{ ansible_facts['net_system'] }}: {{ ansible_facts['net_version'] }}"
+  os_dist_ver: "{{ ansible_facts['net_system']|lower }}_{{ ansible_facts['net_version']|slugify }}"
+  distro: "{{ ansible_facts['net_system']|slugify }}"
+  distro_lower: "{{ ansible_facts['net_system']|slugify|lower }}"
+  distro_major: "{{ ansible_facts['net_version']|slugify }}"
+  distro_release: "{{ ansible_facts['net_version']|slugify }}"
+  # local: "{{ ansible_facts['ansible_local'] }}"

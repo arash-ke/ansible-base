@@ -1,0 +1,43 @@
+---
+packages:
+  unused:
+    - ufw
+    - cloud-init
+  common:
+    - rsyslog
+    - logrotate
+    - net-tools
+    - vim
+    - bash-completion
+    - screen
+    - ntp
+    - python3-apt
+    - gpg
+  wireguard:
+    - wireguard-dkms
+    - wireguard-tools
+  firewall:
+    - iptables
+    - ipset
+  router:
+    - tcpdump
+    - traceroute
+    - mtr
+    - nmon
+    - iftop
+  nginx: nginx-1:1.18.0-1.el8.ngx
+  docker_remove:
+    - docker
+    - docker-client
+    - docker-client-latest
+    - docker-common
+    - docker-latest
+    - docker-latest-logrotate
+    - docker-logrotate
+    - docker-engine
+  docker_compose: "https://github.com/docker/compose/releases/download/{{ app_versions.docker_compose }}/docker-compose-Linux-x86_64"
+  vmware_guest: open-vm-tools
+  ansible: ansible
+  git: git-core
+  python: python3
+  pip: python3-pip

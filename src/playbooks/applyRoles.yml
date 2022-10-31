@@ -1,0 +1,24 @@
+---
+- hosts: "{{ target_hosts | mandatory }}"
+  vars_files:
+    - vars/play_sysadmin.yml
+  handlers:
+    - import_tasks: "{{ sysAdmin_handlers_path }}/network.yml"
+    - import_tasks: "{{ sysAdmin_handlers_path }}/service.yml"
+    - import_tasks: "{{ sysAdmin_handlers_path }}/system.yml"
+  pre_tasks:
+    - import_tasks: tasks/global-pre.yml
+      tags: always
+  tasks:
+    - name: Include Roles
+      include_role:
+        name: "{{ current_role }}"
+      loop: "{{ roles|default([]) }}"
+      loop_control:
+        loop_var: current_role
+      when: current_role != 'common'
+      tags: 
+        - always
+  post_tasks:
+    - import_tasks: tasks/global-post.yml
+      tags: always

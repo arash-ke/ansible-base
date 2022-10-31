@@ -1,0 +1,48 @@
+---
+- name: Single User
+  include_tasks:
+    file: "{{ sysAdmin_tasks_path }}/ApplySystemUser.yml"
+    apply:
+      tags:
+        - never
+        - Apply User
+        - ApplyUser
+        - applyUser
+  vars:
+    system_user: { key: "{{ username }}", value: "{{ system_users[username] }}" }
+  when:
+    - username is defined
+    - username in system_users
+  tags: 
+    - Apply User
+    - ApplyUser
+    - applyUser
+
+- name: All Users
+  include_tasks: 
+    file: "{{ sysAdmin_tasks_path }}/ApplySystemUser.yml"
+    apply:
+      tags: 
+        - never
+        - Apply Users
+        - ApplyUsers
+        - applyUsers
+  loop: "{{ system_users|dict2items }}"
+  loop_control:
+    loop_var: system_user
+    label: "{{ system_user.key }}"
+  tags: 
+    - Apply Users
+    - ApplyUsers
+    - applyUsers
+
+- name: Apply Pubkey
+  authorized_key:
+    user: "{{ username|mandatory }}"
+    state: present
+    key: "{{ lookup('file', pubkey|mandatory ) }}"
+    # comment: "{{ username }}"
+  tags:
+    - Apply Pubkey
+    - ApplyPubkey
+    - applyPubkey

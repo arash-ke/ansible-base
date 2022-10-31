@@ -1,0 +1,24 @@
+---
+- name: Ensure ORG folder
+  ansible.builtin.file:
+    dest: "{{ ansible_facts.env.ANSIBLE_L_BASE }}/env/{{ org.key }}"
+    state: directory
+- name: Ensure environment inventory
+  ansible.builtin.git:
+    dest: "{{ ansible_facts.env.ANSIBLE_L_BASE }}/env/{{ org.key }}/{{ inv.key }}"
+  args: "{{ inv.value.git }}"
+  loop: "{{ org.value|dict2items }}"
+  loop_control:
+    loop_var: inv
+    label: "{{ inv.key }}"
+- name: Ensure inventory config
+  ansible.builtin.template:
+    src: "{{ tasks_path }}/inventory.j2"
+    dest: "{{ ansible_facts.env.ANSIBLE_L_BASE }}/env/{{ org.key }}/{{ inv.key }}/.inventory"
+  vars:
+    config: "{{ inv.value.config }}"
+  loop: "{{ org.value|dict2items }}"
+  loop_control:
+    loop_var: inv
+    label: "{{ inv.key }}"
+  when: inv.value.config is defined

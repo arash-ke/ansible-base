@@ -1,0 +1,136 @@
+repositories:
+  default:
+    AppStream:
+      file: CentOS-AppStream
+      name: AppStream
+      description: CentOS-$releasever - AppStream
+      mirrorlist: http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=AppStream&infra=$infra
+      # baseurl: http://mirror.centos.org/$contentdir/$releasever/AppStream/$basearch/os/
+      gpgcheck: yes
+      enabled: yes
+      gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+    Base:
+      file: CentOS-Base
+      name: BaseOS
+      description: CentOS-$releasever - Base
+      mirrorlist: http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=BaseOS&infra=$infra
+      # baseurl: http://mirror.centos.org/$contentdir/$releasever/BaseOS/$basearch/os/
+      gpgcheck: yes
+      enabled: yes
+      gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+    Plus:
+      file: CentOS-centosplus
+      name: centosplus
+      description: CentOS-$releasever - Plus
+      mirrorlist: http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=centosplus&infra=$infra
+      # baseurl: http://mirror.centos.org/$contentdir/$releasever/centosplus/$basearch/os/
+      gpgcheck: yes
+      enabled: no
+      gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+    CR:
+      file: CentOS-CR
+      name: Cr
+      description: CentOS-$releasever - cr
+      mirrorlist: http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=cr&infra=$infra
+      # baseurl: http://mirror.centos.org/$contentdir/$releasever/cr/$basearch/os/
+      gpgcheck: yes
+      enabled: no
+      gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+    DebugInfo:
+      file: CentOS-Debuginfo
+      name: base-debuginfo
+      description: CentOS-$releasever - Debuginfo
+      baseurl: http://debuginfo.centos.org/$releasever/$basearch/
+      gpgcheck: yes
+      enabled: no
+      gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+    Devel:
+      file: CentOS-Devel
+      name: Devel
+      description: CentOS-$releasever - Devel WARNING! FOR BUILDROOT USE ONLY!
+      mirrorlist: http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=Devel&infra=$infra
+      # baseurl: http://mirror.centos.org/$contentdir/$releasever/Devel/$basearch/os/
+      gpgcheck: 1
+      enabled: 0
+      gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+    Extra:
+      file: CentOS-Extras
+      name: extras
+      description: CentOS-$releasever - Extras
+      mirrorlist: http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=extras&infra=$infra
+      # baseurl: http://mirror.centos.org/$contentdir/$releasever/extras/$basearch/os/
+      gpgcheck: yes
+      enabled: yes
+      gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+    Fasttrack:
+      file: CentOS-fasttrack
+      name: fasttrack
+      description: CentOS-$releasever - fasttrack
+      mirrorlist: http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=fasttrack&infra=$infra
+      # baseurl: http://mirror.centos.org/$contentdir/$releasever/fasttrack/$basearch/os/
+      gpgcheck: yes
+      enabled: no
+      gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+    HA:
+      file: CentOS-HA
+      name: HighAvailability
+      description: CentOS-$releasever - HA
+      mirrorlist: http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=HighAvailability&infra=$infra
+      # baseurl: http://mirror.centos.org/$contentdir/$releasever/HighAvailability/$basearch/os/
+      gpgcheck: yes
+      enabled: no
+      gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+    PowerTools:
+      file: CentOS-PowerTools
+      name: PowerTools
+      description: CentOS-$releasever - PowerTools
+      mirrorlist: http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=PowerTools&infra=$infra
+      # baseurl: http://mirror.centos.org/$contentdir/$releasever/PowerTools/$basearch/os/
+      gpgcheck: yes
+      enabled: no
+      gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+  epel:
+    epel-modular:
+      name: epel-modular
+      description: Extra Packages for Enterprise Linux Modular $releasever - $basearch
+      # baseurl: https://download.fedoraproject.org/pub/epel/$releasever/Modular/$basearch
+      metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-modular-$releasever&arch=$basearch&infra=$infra&content=$contentdir
+      enabled: yes
+      gpgcheck: yes
+      gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPE
+      file: epel-modular
+    epel:
+      name: epel
+      description: Extra Packages for Enterprise Linux $releasever - $basearch
+      # baseurl: https://download.fedoraproject.org/pub/epel/$releasever/Everything/$basearch
+      metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-$releasever&arch=$basearch&infra=$infra&content=$contentdir
+      enabled: yes
+      gpgcheck: yes
+      gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPE
+      file: epel
+    epel-debuginfo:
+      name: epel-debuginfo
+      description: Extra Packages for Enterprise Linux $releasever - $basearch - Debug
+      # baseurl: https://download.fedoraproject.org/pub/epel/$releasever/Everything/$basearch/debug
+      metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-debug-$releasever&arch=$basearch&infra=$infra&content=$contentdir
+      enabled: no
+      gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPE
+      gpgcheck: yes
+      file: epel
+    epel-source:
+      name: epel-source
+      description: Extra Packages for Enterprise Linux $releasever - $basearch - Source
+      # baseurl: https://download.fedoraproject.org/pub/epel/$releasever/Everything/SRPMS
+      metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-source-$releasever&arch=$basearch&infra=$infra&content=$contentdir
+      enabled: no
+      gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPE
+      gpgcheck: yes
+      file: epel
+
+  php: https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+  nginx:
+    base: http://nginx.org/packages/centos/$releasever/$basearch/
+    gpg: https://nginx.org/keys/nginx_signing.key
+  openconnect:
+    base: https://download.copr.fedorainfracloud.org/results/dwmw2/openconnect/epel-8-$basearch/
+    gpg: https://download.copr.fedorainfracloud.org/results/dwmw2/openconnect/pubkey.gpg

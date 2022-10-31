@@ -1,0 +1,13 @@
+---
+- name: Apply sysctl config
+  become: yes
+  when: sysctl_config is defined
+  block:
+  - name: Ensure sysctl config
+    template:
+      src: "{{ sysAdmin_templates_path }}/generic.sysctl.j2"
+      dest: "/etc/sysctl.d/{{ sysctl_config.priority|default(50) }}-{{ sysctl_config.name }}.conf"
+      mode: "{{ item.mode|default('0644') }}"
+      owner: "{{ item.owner|default('root') }}"
+      group: "{{ item.group|default('root') }}"
+    notify: Reload Sysctl

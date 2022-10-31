@@ -1,0 +1,30 @@
+repositories:
+  default:
+    main:
+      url: http://deb.debian.org/debian
+      release: buster
+      branches:
+        - main
+        - contrib
+        - non-free
+      src: no
+    updates:
+      url: http://deb.debian.org/debian
+      release: buster-updates
+      branches:
+        - main
+        - contrib
+        - non-free
+    security:
+      url: http://deb.debian.org/debian-security
+      release: buster/updates
+      branches:
+        - main
+        - contrib
+        - non-free
+  # docker:
+  #   base: https://download.docker.com/linux/centos/7/$basearch/stable
+  #   gpg: https://download.docker.com/linux/centos/gpg
+  # nginx:
+  #   base: http://nginx.org/packages/centos/$releasever/$basearch/
+  #   gpg: https://nginx.org/keys/nginx_signing.key

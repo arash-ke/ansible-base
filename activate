@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+
+me="$(realpath $0)"
+me_name=$(basename $me)
+me_dir=$(dirname $me)
+
+environment=$1
+if ! [ -z "$environment" ] && ! [ "$environment" = "-v" ]; then
+    shift
+    inventory=$1
+    shift
+fi
+if [ "$environment" = "-v" ]; then
+    environment=
+    shift
+    vault=$1
+    shift
+fi
+valid_env=1
+if [ -z "$inventory" ] || [ -z "$environment" ]; then
+    echo "Activating empty env! ($me_dir)"
+    valid_env=0
+    environment=ansible
+    inventory=global
+    if ! [ -z "$2" ]; then
+        vault=$2
+    fi
+fi
+source deactivate
+export _OLD_PS1="$PS1"
+echo "Activating $environment:$inventory ..."
+
+export ANSIBLE_L_BASE=$(realpath $me_dir)
+export ANSIBLE_L_ROOT_PATH=$(realpath "$ANSIBLE_L_BASE")
+
+if [ $valid_env -eq 1 ]; then
+    export ANSIBLE_L_ENV=$environment
+    export ANSIBLE_L_INV=$inventory
+    export ANSIBLE_L_ENV_PATH="$ANSIBLE_L_ROOT_PATH/env/$ANSIBLE_L_ENV"
+    export ANSIBLE_L_INV_PATH="$ANSIBLE_L_ENV_PATH/$ANSIBLE_L_INV"
+    export ANSIBLE_L_INVENTORY="--inventory \"$ANSIBLE_L_INV_PATH/inventory\""
+    # export ANSIBLE_L_SSH_CONF=
+    if [ -f "$ANSIBLE_L_INV_PATH/files/ssh.conf" ]; then
+        export ANSIBLE_L_SSH_FILE="$ANSIBLE_L_INV_PATH/files/ssh.conf"
+    fi
+    source "$ANSIBLE_L_INV_PATH/.inventory"
+fi
+
+export ANSIBLE_L_SRC_PATH="$ANSIBLE_L_ROOT_PATH/src"
+export ANSIBLE_FILTER_PLUGINS=$ANSIBLE_L_SRC_PATH/plugins/filter
+export ANSIBLE_CALLBACK_PLUGINS=$ANSIBLE_L_SRC_PATH/plugins/callback
+export ANSIBLE_ACTION_PLUGINS=$ANSIBLE_L_SRC_PATH/plugins/action
+export ANSIBLE_LIBRARY=$ANSIBLE_L_SRC_PATH/modules
+export ANSIBLE_ROLES_PATH=$ANSIBLE_L_SRC_PATH/roles
+export ANSIBLE_PLAYS_PATH=$ANSIBLE_L_SRC_PATH/playbooks
+export ANSIBLE_L_SSH_COM_ARGS=
+
+if [ -r "$ANSIBLE_L_SSH_FILE" ]; then
+    export ANSIBLE_L_SSH_COM_ARGS="-F '$ANSIBLE_L_SSH_FILE'"
+fi
+if ! [ -z "$ANSIBLE_L_SSH_ARGS" ]; then
+    export ANSIBLE_L_SSH_COM_ARGS="$ANSIBLE_L_SSH_COM_ARGS $ANSIBLE_L_SSH_ARGS"
+fi
+
+if ! [ -z "$ANSIBLE_L_SSH_COM_ARGS" ]; then
+    export ANSIBLE_L_SSH_COM_ARGS="--ssh-common-args \"$ANSIBLE_L_SSH_COM_ARGS\""
+fi
+
+if ! [ -z "$_ANSIBLE_PS1" ]; then
+    PS1=$(echo $PS1 | sed -e "s/$_ANSIBLE_PS1 //")
+fi
+
+if ! [ -z "$vault" ] && [ -f "$ANSIBLE_L_ROOT_PATH/vault/$vault.pass" ]; then
+    export ANSIBLE_L_VAULT="--vault-id=\"$vault@$ANSIBLE_L_ROOT_PATH/vault/$vault.pass\""
+fi
+
+export _ANSIBLE_PS1="($environment:$inventory)"
+PS1="$_ANSIBLE_PS1 $PS1"
+
+export PS1
+# This should detect bash and zsh, which have a hash command that must
+# be called to get it to forget past commands.  Without forgetting
+# past commands the $PATH changes we made may not be respected
+# if [ -n "${BASH:-}" -o -n "${ZSH_VERSION:-}" ] ; then
+#     hash -r
+# fi
+
+if [ $valid_env -eq 1 ]; then
+    export ANSIBLE_L_ENV_NAME=${environment}.${inventory}
+    shift
+    shift
+fi
+
+for var in "$@"
+do
+    export $var
+    export -p | grep "$var"
+done
+
+if [ -f 'localenv' ]; then
+    echo Loading localenv
+    source localenv
+fi
+
+if [ $valid_env -eq 1 ]; then
+    inv_git_path=$(git -C "$ANSIBLE_L_INV_PATH" rev-parse --git-dir)
+    pre_commit="$PWD/scripts/pre-commit"
+    hook_path="$inv_git_path/hooks/pre-commit"
+    if [ -L "$hook_path" ] && [ "$(realpath $hook_path)" != "$PWD/scripts/pre-commit" ]; then
+        rm -fv $hook_path
+    fi
+    if ! [ -L "$hook_path" ]; then
+        echo "Setting pre-commit hook @ $inv_git_path"
+        ln -s $PWD/scripts/pre-commit $hook_path
+    fi
+fi
+
+export -p | grep ANSIBLE

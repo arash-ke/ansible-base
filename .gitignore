@@ -1,0 +1,14 @@
+*.password
+*.pass
+.vscode
+backup
+*.pyc
+__pycache__
+etc/ssh.config
+*.inventory
+*.list
+workspace.code-workspace
+init/*.yml
+src/roles/*
+!src/roles/.gitkeep
+env/*

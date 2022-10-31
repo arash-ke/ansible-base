@@ -1,0 +1,15 @@
+---
+- name: Daemon Reload
+  become: yes
+  service:
+    daemon_reload: yes
+- name: Restart Services 'ssh'
+  become: yes
+  service:
+    name: "{{ os.services_name.ssh|default('sshd') }}"
+    state: restarted
+- name: Restart Services 'ntp'
+  become: yes
+  systemd:
+    name: "{{ os.services_name.ntp|default('ntpd') }}"
+    state: restarted

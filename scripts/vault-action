@@ -1,0 +1,43 @@
+#!/bin/bash
+
+me="$(realpath $0)"
+me_name=$(basename $me)
+me_dir=$(dirname $me)
+
+. ${me_dir}/env
+
+if [ -f ~/.ansible_env ]; then
+    . ~/.ansible_env
+fi
+
+ACTION=view
+###############################################################################
+#   Pars Args
+###############################################################################
+# Parse ARGS BEGIN
+declare -a POSITIONAL
+while [[ $# -gt 0 ]]
+do
+    key="$1"
+
+    case $key in
+    
+    -a|--action)
+        ACTION="$2"
+        shift # past argument
+        shift # past argument
+    ;;
+    *)
+        # echo $key
+        POSITIONAL+=("$1")
+        shift # past argument
+    ;;
+    esac
+done
+# set -- "${POSITIONAL[@]}" # restore positional parameters
+# Parse ARGS END
+
+cmd="ansible-vault" 
+e="$cmd $ACTION $ANSIBLE_L_VAULT ${POSITIONAL[@]}"
+echo $e
+eval $(echo $e)

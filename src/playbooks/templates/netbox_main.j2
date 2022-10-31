@@ -1,0 +1,37 @@
+---
+hostname: {{content.inventory_hostname}}
+{% if content.domain is defined %}
+hostdomain: {{content.domain}}
+{% endif %}
+
+{% if (managment_if is defined) and (content.interfaces is defined) and ((content.interfaces|selectattr("display", 'eq', managment_if))[0].ip_addresses[0].address is defined) -%}
+ansible_host: {{ (content.interfaces|selectattr("display", 'eq', managment_if))[0].ip_addresses[0].address|ansible.netcommon.ipaddr('address') }}
+{% elif content.primary_ip4 is defined %}
+ansible_host: {{ content.primary_ip4 }}
+{% endif %}
+{# {% if (content.interfaces is defined) or (content.primary_ip4 is defined)  %}
+ansible_host: {{ managment_if is defined|ternary((content.interfaces|selectattr("display", 'eq', managment_if))[0].ip_addresses[0].address|default(content.primary_ip4)|ansible.netcommon.ipaddr('address'),content.primary_ip4) }}
+{% endif %} #}
+{# 
+OS: linux
+Distro: debian
+MajorVersion: 10
+OsVersion: 10.2
+
+Datacenter: tic
+
+platform: vmware
+
+r_bacula_dbtype: "pgsql" # mysql or pgsql
+r_bacula_dbname: "bacula"
+r_bacula_dbuser: "bacula"
+r_bacula_telegram_chat_id: "-442886636"
+r_bacula_telegram_proxy: "http://proxy.fwut.local:3128"
+r_bacula_server_name: "{{hostname}}.{{hostdomain}}"
+r_bacula_server_ip: "{{ansible_host}}"
+r_bacula_dir_address: "{{ansible_host}}"
+
+roles:
+  - common
+  - firewall
+  - bacula-server #}

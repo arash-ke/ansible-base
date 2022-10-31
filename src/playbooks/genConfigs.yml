@@ -1,0 +1,58 @@
+---
+- hosts: localhost
+  connection: local
+  # gather_facts: no
+  vars:
+    _host_prefix: "{{host_prefix | default(None) }}"
+  tasks:
+    - name: SSH Config
+      ansible.builtin.template:
+        src: ssh_config.j2
+        dest: "{{ dst_path|default('~/.ssh/conf.d') }}/{{ _envname|default(ssh_config) }}"
+        mode: '0600'
+      vars:
+        _envname: ->
+          "{{ (ansible_facts.env.ANSIBLE_L_ENV_TAG is defined)|ternary(ansible_facts.env.ANSIBLE_L_ENV_TAG|default('') + '.', '') }}
+          {{ envname|default(ansible_facts.env.ANSIBLE_L_ENV_NAME_EXPORT|default(ansible_facts.env.ANSIBLE_L_ENV_NAME)) }}"
+        ssh_conf: "{{ include_ssh_conf|default(True)|ternary(lookup('file', ansible_facts.env.ANSIBLE_L_SSH_FILE, errors='ignore'),'') }}"
+      tags:
+        - ssh
+        - never
+    - name: Gen Host Vars
+      block:
+        - name: Ensure Host Folders
+          ansible.builtin.file:
+            path: "{{ inv_path|default(ansible_inventory_sources[0]) }}/host_vars/{{ hostinfo.key }}"
+            state: directory
+            mode: 0644
+          loop: "{{ hostvars|dict2items }}"
+          loop_control:
+            loop_var: hostinfo
+            label: "{{ hostinfo.key }}"
+          tags: host_vars_folder
+        - name: Generating complete vars
+          ansible.builtin.template:
+            src: "{{ template|default('nice_yaml.j2') }}"
+            dest: "{{ inv_path|default(ansible_inventory_sources[0]) }}/host_vars/{{ hostinfo.key }}/{{ dst|mandatory }}"
+            mode: 0644
+          vars:
+            content: "{{ hostinfo.value }}"
+          loop: "{{ hostvars|dict2items }}"
+          loop_control:
+            loop_var: hostinfo
+            label: "{{ hostinfo.key }}"
+          tags: host_vars_varfile
+      tags:
+        - host_vars
+        - never
+    - name: Remove var file
+      ansible.builtin.file:
+        path: "{{ inv_path|default(ansible_inventory_sources[0]) }}/host_vars/{{ hostinfo.key }}/{{ dst|mandatory }}"
+        state: absent
+      loop: "{{ hostvars|dict2items }}"
+      loop_control:
+        loop_var: hostinfo
+        label: "{{ hostinfo.key }}"
+      tags:
+        - rm_var_file
+        - never

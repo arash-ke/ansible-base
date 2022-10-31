@@ -1,0 +1,30 @@
+disabled_password: "!"
+disabled_shell: "/bin/false"
+default_shell: "/bin/bash"
+super_admin: wheel
+services_name:
+  ssh: sshd
+  apache: httpd
+  vmware_guest: vmtoolsd
+  ntp: chronyd
+
+paths:
+  sftp: "/usr/libexec/openssh/sftp-server"
+  repo: "/etc/yum.repos.d"
+  repo_gpg: /etc/pki/rpm-gpg
+commands:
+  stop_networking: nmcli networking off
+  start_networking: nmcli networking on
+  # restart_networking: nmcli general reload; nmcli networking off; sleep 5; nmcli networking on
+  restart_networking: systemctl restart NetworkManager
+  apply_hostname: hostname -F /etc/hostname
+  udev_reload: udevadm control --reload
+  udev_trigger: udevadm trigger --action=add
+  sshd_validation: sshd -t -f %s
+  flush_routing_cache: ip route flush cache
+
+default_services:
+  - rsyslog
+  - sshd
+  - chronyd
+  

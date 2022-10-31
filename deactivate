@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+me="$(realpath $0)"
+me_name=$(basename $me)
+me_dir=$(dirname $me)
+
+oldvars=$(export -p | grep ANSIBLE)
+if ! [ -z "$oldvars" ]; then
+    echo "Deactivating Old env ${ANSIBLE_L_ENV}:${ANSIBLE_L_INV}..."
+    eval $(echo "$oldvars" | sed -e "s/export /unset /g" -e "s/\=.*$//")
+fi
+
+if ! [ -z "$_OLD_PS1" ]; then
+    echo "Restoring PS1..."
+    export PS1="$_OLD_PS1"
+    unset _OLD_PS1
+fi

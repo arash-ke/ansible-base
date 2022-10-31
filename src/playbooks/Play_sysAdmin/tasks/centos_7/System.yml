@@ -1,0 +1,17 @@
+---
+- name: Apply Hostname
+  hostname:
+    name: "{{ hostname }}.{{ hostdomain }}"
+  tags:
+    - Apply Hostname
+- name: Reload UDEV
+  shell:
+    cmd: |
+      {{ os.commands.stop_networking }}
+      sleep 5
+      {{ os.commands.udev_reload }}
+      {{ os.commands.udev_trigger }}
+      sleep 5
+      {{ os.commands.start_networking }}
+  tags:
+    - Reload UDEV

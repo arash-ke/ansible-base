@@ -1,0 +1,107 @@
+disabled_password: "!"
+disabled_shell: "/bin/false"
+default_shell: "/bin/bash"
+super_admin: wheel
+services_name:
+  ssh: sshd
+  apache: httpd
+  vmware_guest: vmtoolsd
+  ntp: chronyd
+
+paths:
+  sftp: "/usr/libexec/openssh/sftp-server"
+
+commands:
+  stop_networking: nmcli networking off
+  start_networking: nmcli networking on
+  # restart_networking: nmcli general reload; nmcli networking off; sleep 5; nmcli networking on
+  restart_networking: systemctl restart NetworkManager
+  apply_hostname: hostname -F /etc/hostname
+  udev_reload: udevadm control --reload
+  udev_trigger: udevadm trigger --action=add
+  sshd_validation: sshd -t -f %s
+  flush_routing_cache: ip route flush cache
+
+default_services:
+  - rsyslog
+  - sshd
+  - chronyd
+  
+packages:
+  unused:
+    - firewalld
+  common:
+    - rsyslog
+    - logrotate
+    - net-tools
+    - vim
+    - bash-completion
+    - screen
+  oraclelinux_common:
+    - oracle-epel-release-el7
+    - oracle-release-el7
+    - policycoreutils-python
+  elrepo:
+    - oracle-elrepo-release
+  wireguard:
+    - kmod-wireguard
+    - wireguard-tools
+  firewall:
+    - iptables
+    - ipset
+  router:
+    - tcpdump
+    - traceroute
+    - mtr
+    - nmon
+    - iftop
+  nginx: nginx-1:1.18.0-1.el8.ngx
+  docker_remove:
+    - docker
+    - docker-client
+    - docker-client-latest
+    - docker-common
+    - docker-latest
+    - docker-latest-logrotate
+    - docker-logrotate
+    - docker-engine
+  docker_compose: "https://github.com/docker/compose/releases/download/{{ app_versions.docker_compose }}/docker-compose-Linux-x86_64"
+  vmware_guest: open-vm-tools
+  ansible: ansible
+  git: git-core
+  python: python3
+  pip: python3-pip
+  l2tp: xl2tpd
+  ipsec: libreswan
+  oracledb_prereq:
+    - sysstat
+    - oracleasm
+    - oracleasm-support
+    - elfutils-libelf-devel
+    - unixODBC
+    # - unixODBC-libs
+    - unixODBC-devel
+    - libaio-devel
+    - gcc-c++
+    - libstdc++-devel
+    - gcc
+    - glibc-devel
+    - glibc-headers
+    - kernel-headers
+    - boost-*
+    - libicu-*
+    - ncompress
+    - libXp
+    # - oracle-validated
+    - samba
+    - perl-Digest-SHA1
+    - perl-Convert-ASN1
+    # - system-config-samba
+    - tigervnc-server
+repositories:
+  docker:
+    base: https://download.docker.com/linux/centos/7/$basearch/stable
+    gpg: https://download.docker.com/linux/centos/gpg
+  nginx:
+    base: http://nginx.org/packages/centos/$releasever/$basearch/
+    gpg: https://nginx.org/keys/nginx_signing.key

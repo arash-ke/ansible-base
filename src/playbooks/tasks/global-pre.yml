@@ -1,0 +1,48 @@
+---
+- name: Load Variables
+  tags: always
+  block:
+    - name: Load system variables
+      include_vars:
+        dir: ../vars/common
+        ignore_unknown_extensions: yes
+    - name: Populate facts var
+      include_vars: ../vars/facts/{{ansible_connection}}-{{ansible_facts['system']}}.yml      
+    - name: Loading OS variables
+      include_vars:
+        dir: "{{ item }}"
+        name: os
+      tags: load_os_vars
+      loop: "{{ query('first_found', ['../vars/os/{{ facts_os_dist_ver }}.yml', '../vars/os/{{ facts_distro_lower }}/{{ facts_distro_major }}'], errors='ignore') }}"
+    - name: Ensure OS variables are loaded
+      assert:
+        that: os is defined
+        fail_msg: | 
+          Could not load any OS variables!
+          Paths:
+            '../vars/os/{{ facts_os_dist_ver }}.yml'
+            '../vars/os/{{ facts_distro_lower }}/{{ facts_distro_major }}'
+      tags: ensure_os_vars
+- name: Show variables
+  debug:
+    var: ansible_included_var_files
+  tags: LoadedVars
+  when: "'LoadedVars' in ansible_run_tags"
+- name: Get Variable
+  debug:
+    var: "{{ var }}"
+  tags:
+    - never
+    - GetVar
+    - get_var
+    - Get Var
+  when:
+    - var is defined
+# - name: Get Hosts
+#   debug:
+#     msg: "{{ ansible_play_hosts|map('extract', hostvars, 'ansible_host') }}"
+#   tags: 
+#     - never
+#     - GetHosts
+#     - get_hosts
+#   run_once: true

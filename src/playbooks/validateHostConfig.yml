@@ -1,0 +1,6 @@
+---
+- hosts: "{{ target_hosts | mandatory }}"
+  tasks:
+    - name: Check network interfaces
+      debug:
+        var: ansible_facts['domain']

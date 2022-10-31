@@ -1,0 +1,99 @@
+super_admin: sudo
+services_name:
+  ssh: sshd
+  # apache: httpd
+  vmware_guest: vmtoolsd
+  ntp: ntp
+
+paths:
+  sftp: "/usr/lib/openssh/sftp-server"
+  bashrc: "/etc/bash.bashrc"
+
+commands:
+  stop_networking: systemctl stop networking
+  start_networking: systemctl start networking
+  restart_networking: systemctl restart networking
+  udev_reload: udevadm control --reload
+  udev_trigger: udevadm trigger --action=add
+  sshd_validation: sshd -t -f %s
+  flush_routing_cache: ip route flush cache
+
+default_services:
+  - rsyslog
+  - sshd
+  # - chronyd
+  
+packages:
+  unused:
+    - ufw
+  common:
+    - rsyslog
+    - logrotate
+    - net-tools
+    - vim
+    - bash-completion
+    - screen
+    - ntp
+  wireguard:
+    - wireguard-dkms
+    - wireguard-tools
+  firewall:
+    - iptables
+    - ipset
+  router:
+    - tcpdump
+    - traceroute
+    - mtr
+    - nmon
+    - iftop
+  nginx: nginx-1:1.18.0-1.el8.ngx
+  docker_remove:
+    - docker
+    - docker-client
+    - docker-client-latest
+    - docker-common
+    - docker-latest
+    - docker-latest-logrotate
+    - docker-logrotate
+    - docker-engine
+  docker_compose: "https://github.com/docker/compose/releases/download/{{ app_versions.docker_compose }}/docker-compose-Linux-x86_64"
+  vmware_guest: open-vm-tools
+  ansible: ansible
+  git: git-core
+  python: python3
+  pip: python3-pip
+
+repositories:
+  default:
+    main:
+      url: http://archive.ubuntu.com/ubuntu
+      release: focal
+      branches:
+        - main
+        - multiverse 
+        - universe
+        - restricted 
+      src: no
+    updates:
+      # disabled: yes
+      url: http://archive.ubuntu.com/ubuntu
+      release: focal-updates
+      branches:
+        - main
+        - multiverse 
+        - universe
+        - restricted
+    security:
+      url: http://security.ubuntu.com/ubuntu
+      release: focal-security
+      branches:
+        - main
+        - multiverse 
+        - universe
+        - restricted
+  # docker:
+  #   base: https://download.docker.com/linux/centos/7/$basearch/stable
+  #   gpg: https://download.docker.com/linux/centos/gpg
+  # nginx:
+  #   base: http://nginx.org/packages/centos/$releasever/$basearch/
+  #   gpg: https://nginx.org/keys/nginx_signing.key

@@ -1,0 +1,24 @@
+super_admin: sudo
+services_name:
+  ssh: sshd
+  apache: apache2
+  vmware_guest: open-vm-tools.service
+  ntp: ntp
+
+paths:
+  sftp: "/usr/lib/openssh/sftp-server"
+  bashrc: "/etc/bash.bashrc"
+
+commands:
+  stop_networking: systemctl stop networking
+  start_networking: systemctl start networking
+  restart_networking: systemctl restart networking
+  udev_reload: udevadm control --reload
+  udev_trigger: udevadm trigger --action=add
+  sshd_validation: sshd -t -f %s
+  flush_routing_cache: ip route flush cache
+
+default_services:
+  - rsyslog
+  - sshd
+  # - chronyd

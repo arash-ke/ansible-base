@@ -1,0 +1,88 @@
+#!/bin/bash
+
+me="$(realpath $0)"
+me_name=$(basename $me)
+me_dir=$(dirname $me)
+
+EXTRA_VARS=$ANSIBLE_L_EXTRA_VARS
+
+###############################################################################
+#   Pars Args
+###############################################################################
+# Parse ARGS BEGIN
+declare -a POSITIONAL
+declare -a module_args
+while [[ $# -gt 0 ]]
+do
+    key="$1"
+
+    case $key in
+    -T|--target)
+        EXTRA_VARS="$EXTRA_VARS --extra-vars \"target_hosts=${2}\""
+        shift # past argument
+        shift # past value
+    ;;
+    # -p|--playbook)
+    #     p="$2"
+    #     if ! [ -f "$p" ]; then
+    #         if [ -f "$ANSIBLE_PLAYS_PATH/$p" ]; then
+    #             p="$ANSIBLE_PLAYS_PATH/$p"
+    #         elif [ -f "$ANSIBLE_PLAYS_PATH/$p.yml" ]; then
+    #             p="$ANSIBLE_PLAYS_PATH/$p.yml"
+    #         elif [ -f "$ANSIBLE_PLAYS_PATH/$p.YML" ]; then
+    #             p="$ANSIBLE_PLAYS_PATH/$p.YML"
+    #         fi
+    #     fi
+    #     PLAYBOOK="$PLAYBOOK $p"
+    #     shift # past argument
+    #     shift # past value
+    # ;;
+    # -S|--skip)
+    #     POSITIONAL+=("--skip-tags='$2'")
+    #     shift # past argument
+    #     shift # past argument
+    # ;;
+    # -t|--tags|--tag)
+    #     POSITIONAL+=("--tags='$2'")
+    #     shift # past argument
+    #     shift # past argument
+    # ;;
+    # -r|--role)
+    #     EXTRA_VARS="$EXTRA_VARS --extra-vars \"role=${2}\""
+    #     shift # past argument
+    #     shift # past value
+    # ;;
+    -a|--args)
+        module_args+=("$2")
+        shift
+        shift
+    ;;
+    -P|--ansible-port)
+        EXTRA_VARS="$EXTRA_VARS --extra-vars \"ansible_port=${2}\""
+        shift # past argument
+        shift # past value
+    ;;
+    # --*)
+    #     var_name=${key#"--"}
+    #     declare ${var_name}=$2
+    #     echo "$var_name => ${!var_name}"
+    #     shift # past argument
+    #     shift # past value
+    # ;;
+    *)
+        # echo $key
+        POSITIONAL+=("$1")
+        shift # past argument
+    ;;
+    esac
+done
+# set -- "${POSITIONAL[@]}" # restore positional parameters
+# Parse ARGS END
+
+cmd="ansible" 
+e="$cmd $ANSIBLE_L_VAULT $ANSIBLE_L_SSH_CONF $ANSIBLE_L_INVENTORY $EXTRA_VARS ${POSITIONAL[@]}"
+if ! [ ${#module_args[@]} -eq 0 ]; then
+    e="$e -a \"${module_args[@]}\""
+fi
+echo $e
+eval $e

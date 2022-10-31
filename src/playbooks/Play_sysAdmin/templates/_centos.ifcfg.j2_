@@ -1,0 +1,40 @@
+TYPE="{{ item.value.type | default('Ethernet') }}"
+BOOTPROTO="{{ item.value.mode | default('dhcp') }}"
+{% if item.value.ipaddr is defined %}
+IPADDR={{ item.value.ipaddr }}
+{% endif %}
+{% if item.value.netmask is defined %}
+NETMASK={{ item.value.netmask }}
+{% endif %}
+{% if item.value.prefix is defined %}
+PREFIX={{ item.value.prefix }}
+{% endif %}
+{% if item.value.gateway is defined %}
+GATEWAY={{ item.value.gateway }}
+{% endif %}
+{% if item.value.dns is defined %}
+{% for dns in item.value.dns %}
+DNS{{ loop.index }}={{ dns }}
+{% endfor %}
+{% endif %}
+NAME="{{ item.key | mandatory }}"
+DEVICE="{{ item.key | mandatory }}"
+{% if item.value.mac is defined %}
+HWADDR={{ item.value.mac }}
+{% endif %}
+{% if item.value.domain is defined %}
+DOMAIN={{ item.value.domain }}
+{% endif %}
+ONBOOT="yes"
+{# # UUID="4d83005e-ca81-4de7-893b-8aeb6a25ffe9"
+# ETHTOOL_OPTS="autoneg on"
+# IPV6_PRIVACY="no"
+# PROXY_METHOD="none"
+# BROWSER_ONLY="no"
+# DEFROUTE="yes"
+# IPV4_FAILURE_FATAL="no"
+# IPV6INIT="yes"
+# IPV6_AUTOCONF="yes"
+# IPV6_DEFROUTE="yes"
+# IPV6_FAILURE_FATAL="no"
+# IPV6_ADDR_GEN_MODE="stable-privacy" #}

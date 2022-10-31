@@ -1,0 +1,10 @@
+---
+{% set file_list = lookup('filetree', "{}".format(sysAdmin_tasks_path), wantlist=true)|selectattr('state', "equalto", 'file') %}
+- name: Import All Tasks
+  tags: never
+  block:
+    {% for f in file_list -%}
+    {% if f.path|basename != 'import_all.yml' and f.path|splitext|last == '.yml' -%}
+    - import_tasks: {{ "{}/{}".format(relative|default(True)|ternary((sysAdmin_tasks_path|relpath(playbook_dir)),sysAdmin_tasks_path), f.path) }}
+    {% endif %}
+    {%- endfor -%}

@@ -1,0 +1,18 @@
+---
+- name: (win) Restart {{ service }}
+  win_service:
+    name: "{{ service|mandatory }}"
+    force_dependent_services: "{{ force|default(omit) }}"
+    state: restarted
+  tags:
+    - restart_service
+    - RestartService
+- name: (win) Restart Services
+  win_service:
+    name: "{{ item }}"
+    force_dependent_services: "{{ force|default(omit) }}"
+    state: restarted
+  tags:
+    - restart_services
+    - RestartServices
+  loop: "{{ services|mandatory }}"

@@ -1,0 +1,4 @@
+---
+- name: Global Post tasks
+  debug:
+    msg: Nothing to do

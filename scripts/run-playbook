@@ -1,0 +1,113 @@
+#!/bin/bash
+
+me="$(realpath $0)"
+me_name=$(basename $me)
+me_dir=$(dirname $me)
+
+EXTRA_ARGS=$ANSIBLE_L_EXTRA_ARGS
+cmd="ansible-playbook" 
+
+###############################################################################
+#   Pars Args
+###############################################################################
+# Parse ARGS BEGIN
+declare -a POSITIONAL
+while [[ $# -gt 0 ]]
+do
+    key="$1"
+
+    case $key in
+    --graph)
+        cmd="ansible-playbook-grapher"
+        shift
+    ;;
+    -T|--target)
+        EXTRA_ARGS="$EXTRA_ARGS --extra-vars \"target_hosts=${2}\""
+        shift # past argument
+        shift # past value
+    ;;
+    -p|--playbook)
+        p="$2"
+        if ! [ -f "$p" ]; then
+            if [ -f "$ANSIBLE_PLAYS_PATH/$p" ]; then
+                p="$ANSIBLE_PLAYS_PATH/$p"
+            elif [ -f "$ANSIBLE_PLAYS_PATH/$p.yml" ]; then
+                p="$ANSIBLE_PLAYS_PATH/$p.yml"
+            elif [ -f "$ANSIBLE_PLAYS_PATH/$p.yaml" ]; then
+                p="$ANSIBLE_PLAYS_PATH/$p.yaml"
+            fi
+        fi
+        PLAYBOOK="$PLAYBOOK $p"
+        shift # past argument
+        shift # past value
+    ;;
+    -S|--skip)
+        POSITIONAL+=("--skip-tags='$2'")
+        shift # past argument
+        shift # past argument
+    ;;
+    -t|--tags|--tag)
+        POSITIONAL+=("--tags='$2'")
+        shift # past argument
+        shift # past argument
+    ;;
+    -r|--role)
+        EXTRA_ARGS="$EXTRA_ARGS --extra-vars \"role=${2}\""
+        shift # past argument
+        shift # past value
+    ;;
+    -a|--apply-role)
+        p="applyRole"
+        if ! [ -f "$p" ]; then
+            if [ -f "$ANSIBLE_PLAYS_PATH/$p" ]; then
+                p="$ANSIBLE_PLAYS_PATH/$p"
+            elif [ -f "$ANSIBLE_PLAYS_PATH/$p.yml" ]; then
+                p="$ANSIBLE_PLAYS_PATH/$p.yml"
+            elif [ -f "$ANSIBLE_PLAYS_PATH/$p.YML" ]; then
+                p="$ANSIBLE_PLAYS_PATH/$p.YML"
+            fi
+        fi
+        PLAYBOOK="$PLAYBOOK $p"
+
+        EXTRA_ARGS="$EXTRA_ARGS --extra-vars \"role=${2}\""
+        shift # past argument
+        shift # past value
+    ;;
+    -P|--ansible-port)
+        EXTRA_ARGS="$EXTRA_ARGS --extra-vars \"ansible_port=${2}\""
+        shift # past argument
+        shift # past value
+    ;;
+    -j|--json)
+        VARNAME=$2
+        DATA=$3
+        EXTRA_ARGS="$EXTRA_ARGS --extra-vars '{\"${VARNAME}\":$DATA}'"
+        shift # past argument
+        shift # past value
+        shift # past data
+    ;;
+    -H|--ansible-host)
+        EXTRA_ARGS="$EXTRA_ARGS --extra-vars \"ansible_host=${2}\""
+        shift # past argument
+        shift # past value
+    ;;
+    # --*)
+    #     var_name=${key#"--"}
+    #     declare ${var_name}=$2
+    #     echo "$var_name => ${!var_name}"
+    #     shift # past argument
+    #     shift # past value
+    # ;;
+    *)
+        # echo $key
+        POSITIONAL+=("${1}")
+        shift # past argument
+    ;;
+    esac
+done
+# set -- "${POSITIONAL[@]}" # restore positional parameters
+# Parse ARGS END
+
+e="$cmd $ANSIBLE_L_VAULT $ANSIBLE_L_SSH_COM_ARGS $ANSIBLE_L_INVENTORY $EXTRA_ARGS ${POSITIONAL[@]} $PLAYBOOK"
+echo "$e"
+eval "$e"

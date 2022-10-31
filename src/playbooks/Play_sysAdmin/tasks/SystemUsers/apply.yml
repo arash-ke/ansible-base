@@ -1,0 +1,63 @@
+---
+- name: Ensure user "{{ system_user.key }}" exists
+  user:
+    name: "{{ system_user.key }}"
+    comment: "{{ system_user.value.name|default(omit) }}"
+    shell: "{{ os.default_shell|default('/bin/bash') }}"
+  register: user_info
+  tags:
+    - Ensure User
+- name: Set password for "{{ system_user.key }}"
+  user:
+    name: "{{ system_user.key }}"
+    password: "{{ users_password[system_user.key] }}"
+  when: "system_user.key in users_password"
+  tags:
+    - Set User Password
+- name: Disable password on "{{ system_user.key }}"
+  user:
+    name: "{{ system_user.key }}"
+    password: "{{ os.disabled_password|default('!') }}"
+  when: "system_user.key not in users_password"
+  tags:
+    - Set User Password
+- name: Apply Auth key of "{{ system_user.key }}"
+  authorized_key:
+    user: "{{ system_user.key }}"
+    state: present
+    key: "{{ lookup('file', item) }}"
+    comment: "{{ system_user.value.name }}"
+    exclusive: yes
+  loop: "{{ query('first_found', env_ssh_keys_path+'/'+system_user.key+'.pub', errors='ignore') }}"
+  tags:
+    - Ensure User Authkey
+- name: Generate groups for "{{ system_user.key }}"
+  generate_user_groups:
+    user_groups: "{{ system_user.value.groups|default(None) }}"
+    user_roles: "{{ system_user.value.roles|default(None) }}"
+    system_roles: "{{ system_roles }}"
+    host_roles: "{{ roles|default(None) }}"
+    current_groups: "{{ user_info.groups|default(omit) }}"
+  register: user_groups
+  tags:
+    - Ensure User Groups
+- debug:
+    msg: "{{ user_groups.msg }}"
+- name: Ensure groups for "{{ system_user.key }}"
+  user:
+    name: "{{ system_user.key }}"
+    groups: "{{ user_groups.groups }}"
+  diff: yes
+  tags: 
+    - Ensure User Groups
+- name: Ensure skel for "{{ system_user.key }}"
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ user_info.home }}/"
+    owner: "{{ user_info.name }}"
+    group: "{{ user_info.group }}"
+    mode: "{{ item.mode|default(omit) }}"
+  loop: "{{ q('filetree', files_path + '/skel') }}"
+  loop_control:
+    label: "{{ item.path }}"
+  when: not system_user.value.skip_skel|default(False)

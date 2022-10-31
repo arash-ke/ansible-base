@@ -1,0 +1,21 @@
+---
+- name: Import All Tasks
+  tags: never
+  block:
+    - import_tasks: Play_sysAdmin/tasks/ApplySystemUser.yml
+    - import_tasks: Play_sysAdmin/tasks/ApplySysctlConfig.yml
+    - import_tasks: Play_sysAdmin/tasks/ubuntu_20/tasks.yml
+    - import_tasks: Play_sysAdmin/tasks/SystemUsers/apply.yml
+    - import_tasks: Play_sysAdmin/tasks/SystemUsers/remove.yml
+    - import_tasks: Play_sysAdmin/tasks/ubuntu_18/tasks.yml
+    - import_tasks: Play_sysAdmin/tasks/ios_12-2-55-se9/tasks.yml
+    - import_tasks: Play_sysAdmin/tasks/generic/ServiceManagement.yml
+    - import_tasks: Play_sysAdmin/tasks/generic/UserManagement.yml
+    - import_tasks: Play_sysAdmin/tasks/generic/SystemManagement.yml
+    - import_tasks: Play_sysAdmin/tasks/centos_8/Networking.yml
+    - import_tasks: Play_sysAdmin/tasks/centos_8/System.yml
+    - import_tasks: Play_sysAdmin/tasks/windows_10/Services.yml
+    - import_tasks: Play_sysAdmin/tasks/debian_10/tasks.yml
+    - import_tasks: Play_sysAdmin/tasks/centos_7/Networking.yml
+    - import_tasks: Play_sysAdmin/tasks/centos_7/System.yml
+    

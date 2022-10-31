@@ -1,0 +1,27 @@
+---
+- name: Reload Sysctl
+  become: yes
+  shell:
+    cmd: "sysctl --system"
+- name: Apply Hostname
+  become: yes
+  shell:
+    cmd: "{{ os.commands.apply_hostname }}"
+- name: Reload UDEV
+  become: yes
+  listen:
+    - Reconfig Network Interfaces
+  shell:
+    cmd: |
+      {{ os.commands.stop_networking }}
+      sleep 5
+      {{ os.commands.udev_reload }}
+      {{ os.commands.udev_trigger }}
+      sleep 5
+      {{ os.commands.start_networking }}
+- name: yum-clean-metadata
+  become: yes
+  command: yum clean metadata
+  args:
+    warn: no
+    

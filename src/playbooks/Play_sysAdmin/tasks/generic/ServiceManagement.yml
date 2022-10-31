@@ -1,0 +1,52 @@
+---
+- name: Become
+  become: yes
+  block:
+    - name: Daemon Reload
+      systemd:
+        daemon_reload: yes
+      tags:
+        - Daemon Reload
+    - name: Disable Services
+      systemd:
+        name: "{{ os.services_name[item]|default(item) }}"
+        enabled: no
+      loop: "{{ services }}"
+      tags:
+        - Disable Services
+    - name: Enable Services
+      systemd:
+        name: "{{ item }}"
+        enabled: yes
+      loop: "{{ services }}"
+      tags:
+        - Enable Services
+    - name: Stop Services
+      systemd:
+        name: "{{ item }}"
+        state: stopped
+      loop: "{{ services }}"
+      tags:
+        - Stop Services
+    - name: Start Services
+      systemd:
+        name: "{{ item }}"
+        state: started
+      loop: "{{ services }}"
+      tags:
+        - Start Services
+    - name: Restart Services
+      systemd:
+        name: "{{ os.services_name[item]|default(item) }}"
+        state: restarted
+      loop: "{{ services }}"
+      tags:
+        - RestartServices
+        - restart_services
+    - name: Restart Service
+      systemd:
+        name: "{{ os.services_name[service]|default(service) }}"
+        state: restarted
+      tags:
+        - RestartService
+        - restart_service

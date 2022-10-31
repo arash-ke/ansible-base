@@ -1,0 +1,5 @@
+NAME="{{ item.key | mandatory }}"
+DEVICE="{{ item.key | mandatory }}"
+{% for on, ov in item.value.items()|default({}) %}
+{{ on|make_ifcfg_config(ov) }}
+{% endfor %}

@@ -1,0 +1,14 @@
+{% if config.vault is defined -%}
+export ANSIBLE_L_VAULT="--vault-id=\"{{ config.vault }}@$ANSIBLE_L_ROOT_PATH/vault/{{ config.vault }}.pass\""
+{% endif %}
+{% if config.ssh_key is defined -%}
+export ANSIBLE_L_EXTRA_VARS="--private-key=\"{{ config.ssh_key }}\""
+{% endif %}
+{% if config.ansible_local is defined -%}
+{% for key, val in config.ansible_local.items() %}
+export ANSIBLE_L_{{ key|upper }}={{ val }}
+{% endfor %}
+{%- endif %}
+{% if config.ansible_args is defined -%}
+export ANSIBLE_L_EXTRA_VARS={{ config.ansible_args|join(' ') }}
+{%- endif %}
