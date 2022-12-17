@@ -86,6 +86,12 @@ do
         shift # past value
         shift # past data
     ;;
+    -o|--only-projects)
+        DATA=$2
+        EXTRA_ARGS="$EXTRA_ARGS --extra-vars '{\"only_projects\":$DATA}'"
+        shift # past argument
+        shift # past data
+    ;;
     -H|--ansible-host)
         EXTRA_ARGS="$EXTRA_ARGS --extra-vars \"ansible_host=${2}\""
         shift # past argument

@@ -216,6 +216,7 @@ __run-playbook() {
         '(--syntax-check)--syntax-check[perform a syntax check on the playbook, but do not execute it]' \
         '(--timeout=)--timeout=[override the SSH timeout in seconds (default=10)]' \
         '(--user -u)'{-u,--user=}'[connect as this user (default=logged_in_user)]' \
+        '(--only-projects -o)'{-o,--only-projects}'[Only apply these projects (regex)]' \
         '(--vault-password-file=)--vault-password-file=[vault password file]' \
         '(--verbose -v)'{-v,--verbose}'[verbose mode (-vvv for more, -vvvv to enable connection debugging)]' \
         '*:files:_files'

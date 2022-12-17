@@ -1,0 +1,5 @@
+---
+extra_vars:
+  target_hosts: all
+write_list:
+  - "all"

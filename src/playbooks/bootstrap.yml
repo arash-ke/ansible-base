@@ -3,33 +3,37 @@
   vars_files:
     - vars/play_sysadmin.yml
   handlers:
-    - import_tasks: "{{ sysAdmin_handlers_path }}/network.yml"
-    - import_tasks: "{{ sysAdmin_handlers_path }}/service.yml"
-    - import_tasks: "{{ sysAdmin_handlers_path }}/system.yml"
+    - ansible.builtin.import_tasks: "{{ sysadmin_handlers_path }}/network.yml"
+    - ansible.builtin.import_tasks: "{{ sysadmin_handlers_path }}/service.yml"
+    - ansible.builtin.import_tasks: "{{ sysadmin_handlers_path }}/system.yml"
   pre_tasks:
-    - include_tasks: tasks/global-pre.yml
+    - ansible.builtin.include_tasks:
+        file: tasks/global-pre.yml
       tags: always
   tasks:
     - name: Include Roles
-      include_role:
+      ansible.builtin.include_role:
         name: "{{ current_role }}"
-      loop: "{{ roles|default([])|intersect(bootstrap_roles|default(['common'])) }}"
+      loop: "{{ host_info.roles|default([])|intersect(bootstrap_roles|default(['common'])) }}"
       loop_control:
         loop_var: current_role
-      tags: 
+        label: "{{ current_role }}"
+      tags:
         - always
-    # - role: common
-    #   tags: common
-    #   when: "'common' in roles"
-    # - role: firewall
-    #   tags: firewall
-    #   when: "'firewall' in roles"
-    # - role: VmwareGuest
-    #   when:
-    #     - platform|default(None) == 'vmware'
-    #     - ansible_facts['virtualization_role']|lower == 'guest'
-    #     - ansible_facts['virtualization_type']|lower == 'vmware'
-    #   tags: VmwareGuest
+  # - role: common
+  #   tags: common
+  #   when: "'common' in roles"
+  # - role: firewall
+  #   tags: firewall
+  #   when: "'firewall' in roles"
+  # - role: VmwareGuest
+  #   when:
+  #     - platform|default(None) == 'vmware'
+  #     - ansible_facts['virtualization_role']|lower == 'guest'
+  #     - ansible_facts['virtualization_type']|lower == 'vmware'
+  #   tags: VmwareGuest
   post_tasks:
-    - include_tasks: tasks/global-post.yml
+    - name: Post tasks
+      ansible.builtin.include_tasks:
+        file: tasks/global-post.yml
       tags: always

@@ -1,6 +1,7 @@
+---
 disabled_password: "!"
-disabled_shell: "/bin/false"
-default_shell: "/bin/bash"
+disabled_shell: /bin/false
+default_shell: /bin/bash
 super_admin: wheel
 services_name:
   ssh: sshd
@@ -9,8 +10,8 @@ services_name:
   ntp: chronyd
 
 paths:
-  sftp: "/usr/libexec/openssh/sftp-server"
-  repo: "/etc/yum.repos.d"
+  sftp: /usr/libexec/openssh/sftp-server
+  repo: /etc/yum.repos.d
   repo_gpg: /etc/pki/rpm-gpg
 commands:
   stop_networking: nmcli networking off
@@ -27,4 +28,3 @@ default_services:
   - rsyslog
   - sshd
   - chronyd
-  

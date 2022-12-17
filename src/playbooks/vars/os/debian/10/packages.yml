@@ -35,9 +35,12 @@ packages:
     - docker-latest-logrotate
     - docker-logrotate
     - docker-engine
-  docker_compose: "https://github.com/docker/compose/releases/download/{{ app_versions.docker_compose }}/docker-compose-Linux-x86_64"
+  docker_compose: https://github.com/docker/compose/releases/download/{{ app_versions.docker_compose }}/docker-compose-Linux-x86_64
   vmware_guest: open-vm-tools
   ansible: ansible
   git: git-core
   python: python3
   pip: python3-pip
+  disk_utils:
+    - parted
+    - xfsprogs

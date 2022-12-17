@@ -1,3 +1,4 @@
+---
 super_admin: sudo
 services_name:
   ssh: sshd
@@ -6,8 +7,8 @@ services_name:
   ntp: ntp
 
 paths:
-  sftp: "/usr/lib/openssh/sftp-server"
-  bashrc: "/etc/bash.bashrc"
+  sftp: /usr/lib/openssh/sftp-server
+  bashrc: /etc/bash.bashrc
 
 commands:
   stop_networking: systemctl stop networking
@@ -22,7 +23,7 @@ default_services:
   - rsyslog
   - sshd
   # - chronyd
-  
+
 packages:
   unused:
     - ufw
@@ -56,7 +57,7 @@ packages:
     - docker-latest-logrotate
     - docker-logrotate
     - docker-engine
-  docker_compose: "https://github.com/docker/compose/releases/download/{{ app_versions.docker_compose }}/docker-compose-Linux-x86_64"
+  docker_compose: https://github.com/docker/compose/releases/download/{{ app_versions.docker_compose }}/docker-compose-Linux-x86_64
   vmware_guest: open-vm-tools
   ansible: ansible
   git: git-core
@@ -72,8 +73,8 @@ repositories:
         - main
         - restricted
         - universe
-        - multiverse 
-      src: no
+        - multiverse
+      src: false
     updates:
       url: http://archive.canonical.com/ubuntu/
       release: bionic-updates

@@ -1,6 +1,6 @@
 ---
-sysAdmin_path: "{{ playbook_dir }}/Play_sysAdmin"
-sysAdmin_tasks_path:  "{{ sysAdmin_path }}/tasks"
-sysAdmin_handlers_path: "{{ sysAdmin_path }}/handlers"
-sysAdmin_templates_path: "{{ sysAdmin_path }}/templates"
-sysAdmin_files_path: "{{ sysAdmin_path }}/files"
+sysadmin_path: "{{ playbook_dir }}/Play_sysAdmin"
+sysadmin_tasks_path: "{{ sysadmin_path }}/tasks"
+sysadmin_handlers_path: "{{ sysadmin_path }}/handlers"
+sysadmin_templates_path: "{{ sysadmin_path }}/templates"
+sysadmin_files_path: "{{ sysadmin_path }}/files"

@@ -4,42 +4,45 @@
     - vars/play_sysadmin.yml
   gather_facts: "{{ gather_facts|default(omit) }}"
   handlers:
-    - import_tasks: "{{ sysAdmin_handlers_path }}/network.yml"
-    - import_tasks: "{{ sysAdmin_handlers_path }}/service.yml"
-    - import_tasks: "{{ sysAdmin_handlers_path }}/system.yml"
+    - name: Network handlers
+      ansible.builtin.import_tasks: "{{ sysadmin_handlers_path }}/network.yml"
+    - name: Service handlers
+      ansible.builtin.import_tasks: "{{ sysadmin_handlers_path }}/service.yml"
+    - name: System handlers
+      ansible.builtin.import_tasks: "{{ sysadmin_handlers_path }}/system.yml"
   pre_tasks:
     - name: Global Pre Tasks
-      import_tasks: tasks/global-pre.yml
+      ansible.builtin.import_tasks: tasks/global-pre.yml
       tags: always
   tasks:
     - name: Load OS tasks
-      include_tasks:
+      ansible.builtin.include_tasks:
         file: "{{ item }}"
         apply:
           tags: never
-      with_fileglob: "{{ sysAdmin_tasks_path }}/{{ facts_os_dist_ver }}/*.yml"
+      with_fileglob: "{{ sysadmin_tasks_path }}/{{ facts_os_dist_ver }}/*.yml"
       loop_control:
         label: "{{ facts_os_dist_ver }}"
       # when: not item.endswith('tasks.yml')
       tags: always
     - name: Load Generic Tasks
-      include_tasks:
+      ansible.builtin.include_tasks:
         file: "{{ task_file }}"
         apply:
           tags: never
-      with_fileglob: "{{ sysAdmin_tasks_path }}/generic/*.yml"
+      with_fileglob: "{{ sysadmin_tasks_path }}/generic/*.yml"
       loop_control:
         loop_var: task_file
       tags: always
     - name: Local Facts
-      debug:
+      ansible.builtin.debug:
         var: facts_local
       tags:
         - never
         - Get Local Facts
         - GetLocalFacts
     - name: Ansible Facts
-      debug:
+      ansible.builtin.debug:
         var: ansible_facts
       tags:
         - never
@@ -49,7 +52,7 @@
     - name: Get System Info
       block:
         - name: Set System info
-          set_fact:
+          ansible.builtin.set_fact:
             system_info:
               connection: "{{ ansible_connection }}"
               host: "{{ ansible_host }}"
@@ -62,23 +65,24 @@
               distro_release: "{{ facts_distro_release|default('VARIABLE NOT DEFINED') }}"
               os_info: "{{ facts_os_info|default('VARIABLE NOT DEFINED') }}"
         - name: Sysetm Info
-          debug:
+          ansible.builtin.debug:
             var: system_info
       tags:
         - never
         - System Info
         - SystemInfo
     - name: Gen Import All tasks
-      local_action:
-        module: template
-        src: "import_all.j2"
-        dest: "{{ sysAdmin_path }}/import_all.yml"
+      ansible.builtin.template:
+        src: import_all.j2
+        dest: "{{ sysadmin_path }}/import_all.yml"
+        mode: 0644
+      delegate_to: localhost
       when:
         - '"GenImportAllTasks" in ansible_run_tags '
     - name: Import All tasks
-      import_tasks: "{{ sysAdmin_path }}/import_all.yml"
+      ansible.builtin.import_tasks: "{{ sysadmin_path }}/import_all.yml"
       when:
         - '"get_tags" in ansible_run_tags '
   post_tasks:
     - name: Globl Post Tasks
-      import_tasks: tasks/global-post.yml
+      ansible.builtin.import_tasks: tasks/global-post.yml

@@ -1,6 +1,7 @@
+---
 disabled_password: "!"
-disabled_shell: "/bin/false"
-default_shell: "/bin/bash"
+disabled_shell: /bin/false
+default_shell: /bin/bash
 super_admin: wheel
 services_name:
   ssh: sshd
@@ -9,7 +10,7 @@ services_name:
   ntp: chronyd
 
 paths:
-  sftp: "/usr/libexec/openssh/sftp-server"
+  sftp: /usr/libexec/openssh/sftp-server
 
 commands:
   stop_networking: nmcli networking off
@@ -26,7 +27,7 @@ default_services:
   - rsyslog
   - sshd
   - chronyd
-  
+
 packages:
   unused:
     - firewalld
@@ -65,7 +66,7 @@ packages:
     - docker-latest-logrotate
     - docker-logrotate
     - docker-engine
-  docker_compose: "https://github.com/docker/compose/releases/download/{{ app_versions.docker_compose }}/docker-compose-Linux-x86_64"
+  docker_compose: https://github.com/docker/compose/releases/download/{{ app_versions.docker_compose }}/docker-compose-Linux-x86_64
   vmware_guest: open-vm-tools
   ansible: ansible
   git: git-core

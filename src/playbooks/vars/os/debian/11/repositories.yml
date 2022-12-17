@@ -1,3 +1,4 @@
+---
 repositories:
   default:
     main:
@@ -7,7 +8,7 @@ repositories:
         - main
         - contrib
         - non-free
-      src: no
+      src: false
     updates:
       url: http://deb.debian.org/debian
       release: bullseye-updates

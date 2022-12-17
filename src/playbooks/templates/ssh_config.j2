@@ -1,13 +1,13 @@
 {{ ssh_conf }}
 {% for h,o in hostvars | dictsort if (v.ansible_connection|default('ssh') == 'ssh') %}
 # {{o.ansible_inventory_sources[0]}}/{{o.inventory_hostname}}
-Host {{ _host_prefix|ternary(_host_prefix|default('') + '.', _envname + '.', '') }}{{ h }} {{ _host_prefix|ternary(_host_prefix|default('') + '.', _envname + '.', '') }}{{ o.ansible_host|default(h) }}
+Host {{ _host_prefix|ternary(_host_prefix | default('') + '.', _envname + '.', '') }}{{ h }} {{ _host_prefix | ternary(_host_prefix|default('') + '.', _envname + '.', '') }}{{ o.ansible_host|default(h) }}
     Hostname {{ o.ansible_host|default(h) }}
     {% if o.ansible_port is defined -%}
     Port {{ o.ansible_port }}
     {% endif -%}
-    User {{ username|default(ansible_facts.env.ANSIBLE_L_USERNAME|default(o.ansible_user)) }}
-    {% for k,v in (o.ssh_client_configs|default({})).items() -%}
+    User {{ username|default(ansible_facts.env.ANSIBLE_L_USERNAME | default(o.ansible_user)) }}
+    {% for k,v in (o.ssh_client_configs | default({}) | combine(o.host_info.network.ssh_config | default({}), recursive=True)).items() -%}
     {{ k }} {{ v }}
     {% endfor %}
 

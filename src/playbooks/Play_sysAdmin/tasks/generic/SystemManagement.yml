@@ -11,7 +11,7 @@
     - get_uptime
 - name: Apply sysctl_config
   include_tasks:
-    file: "{{ sysAdmin_tasks_path }}/ApplySysctlConfig.yml"
+    file: "{{ sysadmin_tasks_path }}/ApplySysctlConfig.yml"
     apply:
       tags:
         - never

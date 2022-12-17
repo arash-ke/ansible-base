@@ -1,0 +1,11 @@
+---
+- name: Ensure role assignment
+  ansible.builtin.assert:
+    quiet: true
+    that:
+      - host_info.roles is defined
+      - ansible_role_name in host_info.roles
+    fail_msg: "{{ ansible_role_name }} is not assigned to {{ inventory_hostname }}, if you still want to do this try with --skip-tags=force_role_definition"
+  tags:
+    - always
+    - force_role_definition

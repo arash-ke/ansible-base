@@ -1,3 +1,4 @@
+---
 super_admin: sudo
 services_name:
   ssh: sshd
@@ -6,8 +7,8 @@ services_name:
   ntp: ntp
 
 paths:
-  sftp: "/usr/lib/openssh/sftp-server"
-  bashrc: "/etc/bash.bashrc"
+  sftp: /usr/lib/openssh/sftp-server
+  bashrc: /etc/bash.bashrc
 
 commands:
   stop_networking: systemctl stop networking

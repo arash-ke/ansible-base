@@ -1,4 +1,4 @@
 ---
 - name: Global Post tasks
-  debug:
+  ansible.builtin.debug:
     msg: Nothing to do

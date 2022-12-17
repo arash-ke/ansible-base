@@ -28,6 +28,11 @@ def initial(array):
 def rest(array):
     return array[1:len(array)]
 
+def remove_keys(obj, keys):
+    for k in keys:
+        if k in obj:
+            obj.pop(k)
+    return obj
 
 class FilterModule(object):
 
@@ -37,7 +42,8 @@ class FilterModule(object):
         return {
             'where': where,
             'initial': initial,
-            'rest': rest
+            'rest': rest,
+            'remove_keys': remove_keys
         }
 
 

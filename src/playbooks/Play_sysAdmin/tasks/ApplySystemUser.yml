@@ -1,13 +1,20 @@
 ---
 - name: Apply system user
-  become: yes
+  become: true
   when: system_user is defined
   block:
-    - name: Active user "{{ system_user.key }}"
-      include_tasks: "{{ sysAdmin_tasks_path }}/SystemUsers/apply.yml"
+    - name: Active user {{ system_user.key }}
+      ansible.builtin.include_tasks: "{{ sysadmin_tasks_path }}/SystemUsers/apply.yml"
       when:
         - system_user.value.active|default(True)
         - inventory_hostname is search(system_user.value.access_list) or group_names is search(system_user.value.access_list)
-    - name: Inactive user "{{ system_user.key }}"
-      include_tasks: "{{ sysAdmin_tasks_path }}/SystemUsers/remove.yml"
-      when: not system_user.value.active|default(True) or not (inventory_hostname is search(system_user.value.access_list) or group_names is search(system_user.value.access_list))        
+    - name: Inactive user {{ system_user.key }}
+      ansible.builtin.include_tasks: "{{ sysadmin_tasks_path }}/SystemUsers/remove.yml"
+      when: |
+        not system_user.value.active | default(True)
+        or not (
+          inventory_hostname is search(
+            system_user.value.access_list
+          )
+        or group_names is search(system_user.value.access_list)
+        )

@@ -87,8 +87,10 @@ export PS1
 
 if [ $valid_env -eq 1 ]; then
     export ANSIBLE_L_ENV_NAME=${environment}.${inventory}
-    shift
-    shift
+    if [ "$#" -gt 2 ]; then
+        shift
+        shift
+    fi
 fi
 
 for var in "$@"
@@ -102,17 +104,21 @@ if [ -f 'localenv' ]; then
     source localenv
 fi
 
+echo "Git pre-hook check"
 if [ $valid_env -eq 1 ]; then
-    inv_git_path=$(git -C "$ANSIBLE_L_INV_PATH" rev-parse --git-dir)
+    inv_git_path=$(git -C "$ANSIBLE_L_INV_PATH/inventory" rev-parse --git-dir)
     pre_commit="$PWD/scripts/pre-commit"
     hook_path="$inv_git_path/hooks/pre-commit"
+    echo "Checking pre-hook link @ $hook_path"
     if [ -L "$hook_path" ] && [ "$(realpath $hook_path)" != "$PWD/scripts/pre-commit" ]; then
         rm -fv $hook_path
     fi
     if ! [ -L "$hook_path" ]; then
         echo "Setting pre-commit hook @ $inv_git_path"
-        ln -s $PWD/scripts/pre-commit $hook_path
+        ln -vs $PWD/scripts/pre-commit $hook_path
     fi
+else
+    echo "Not a valid env!"
 fi
 
 export -p | grep ANSIBLE

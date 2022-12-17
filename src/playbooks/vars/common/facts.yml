@@ -1,2 +1,6 @@
 ---
 facts_connection: "{{ ansible_connection }}"
+facts_host_vars_path: "{{ inventory_dir | regex_replace('dynamic-hosts', 'host_vars') }}/{{ inventory_hostname }}"
+facts_group_vars_path: "{{ inventory_dir | regex_replace('dynamic-hosts', 'host_vars') }}/{{ inventory_hostname }}"
+facts_inventory_files_path: "{{ inventory_dir | regex_replace('dynamic-hosts', 'files') | regex_replace('/inventory/', '/') }}"
+facts_inventory_libs_path: "{{ inventory_dir | regex_replace('dynamic-hosts', 'libs') | regex_replace('/inventory/', '/') }}"
