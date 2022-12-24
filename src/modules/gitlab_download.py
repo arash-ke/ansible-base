@@ -337,7 +337,7 @@ def get_archive():
     file_extension = '.' + params['archive']['format']
     dst = params['dest']
     if params['filename']:
-        dst = "{}/{}".format(params['dest'], params['filename'])
+        dst = "{}/{}{}".format(params['dest'], params['filename'], file_extension)
     elif params['commit_as_filename']:
         dst = "{}/{}{}".format(params['dest'], commit.short_id, file_extension)
     elif params['project_as_filename']:
@@ -365,12 +365,12 @@ def get_archive():
             try:
                 with open(tmpsrc, "wb") as f:
                     project.repository_archive(
-                        sha=commit.short_id,
+                        sha=commit.id,
                         format=params['archive']['format'],
                         streamed=True,
                         action=f.write)
                 shutil.copyfile(tmpsrc, dst)
-                os.remove(tmpsrc)                
+                os.remove(tmpsrc)
                 result['changed'] = True
             except Exception as e:
                 os.remove(tmpsrc)
@@ -383,6 +383,7 @@ def get_archive():
         "committed_date": commit.committed_date,
         "version": "{}-{}".format(slugify(project.name),commit.short_id),
         "filename": dst,
+        "archive_path": "{}-{}".format(project.path, commit.id)
     }
 
     try:
