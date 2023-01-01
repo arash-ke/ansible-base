@@ -1,20 +1,22 @@
-- hosts: localhost
+---
+- name: Initial ansible
+  hosts: localhost
   connection: local
   vars:
-    tasks_path: "Play_init"
+    tasks_path: Play_init
   # gather_facts: no
   tasks:
-    - name: init vars
+    - name: Init vars
       ansible.builtin.include_vars: "{{ item }}"
-      with_fileglob: "{{ ansible_facts.env.ANSIBLE_L_BASE }}/init/**.yml"
+      with_fileglob: "{{ ansible_facts.env.ANSIBLE_L_BASE }}/init/{{ sub_path }}**.yml"
       loop_control:
-        label: "{{ item|basename }}"
+        label: "{{ item | basename }}"
       tags: always
     - name: Ensuring roles
       ansible.builtin.git:
         dest: "{{ ansible_facts.env.ANSIBLE_L_SRC_PATH }}/roles/{{ role.key }}"
-      args: "{{ role.value}}"
-      loop: "{{ role_list|dict2items }}"
+      args: "{{ role.value }}"
+      loop: "{{ role_list | dict2items }}"
       loop_control:
         loop_var: role
         label: "{{ role.key }}"
@@ -29,7 +31,7 @@
           tags:
             - init-inv
             - inventories
-      loop: "{{ inv_list|dict2items }}"
+      loop: "{{ inv_list | dict2items }}"
       loop_control:
         loop_var: org
         label: "{{ org.key }}"

@@ -3,16 +3,19 @@
   vars_files:
     - vars/play_sysadmin.yml
   handlers:
-    - import_tasks: "{{ sysadmin_handlers_path }}/network.yml"
-    - import_tasks: "{{ sysadmin_handlers_path }}/service.yml"
-    - import_tasks: "{{ sysadmin_handlers_path }}/system.yml"
+    - name: Import network related handlers
+      ansible.builtin.import_tasks: "{{ sysadmin_handlers_path }}/network.yml"
+    - name: Import service related handlers
+      ansible.builtin.import_tasks: "{{ sysadmin_handlers_path }}/service.yml"
+    - name: Import system related handlers
+      ansible.builtin.import_tasks: "{{ sysadmin_handlers_path }}/system.yml"
   pre_tasks:
-    - import_tasks: tasks/global-pre.yml
+    - ansible.builtin.import_tasks: tasks/global-pre.yml
       tags: always
   tasks:
     - name: Import Role
-      import_role:
+      ansible.builtin.import_role:
         name: "{{ role | mandatory }}"
   post_tasks:
-    - import_tasks: tasks/global-post.yml
+    - ansible.builtin.import_tasks: tasks/global-post.yml
       tags: always
